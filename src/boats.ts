@@ -3,122 +3,139 @@ import { Asset } from "./types.js";
 export const boats: Asset[] = [
   {
     id: 1,
-    name: "Boston Whaler 170 Montauk",
-    price: 25000,
-    picture: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
+    name: "RIB 5–7m",
+    price: 70000,
+    picture:
+      "https://www.ribworld.co.uk/images/shop/more/959x719_2650_33c2980af6c530dcfbbdd2b1ebdf26c5_1733483015IMG20241203WA0003.jpg",
   },
   {
     id: 2,
-    name: "Sea Ray Sundancer 320",
-    price: 650000,
-    picture: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
+    name: "Tofinou 7.9",
+    price: 90000,
+    picture: "https://img.nauticexpo.com/images_ne/photo-g/20070-19207241.jpg",
   },
   {
     id: 3,
-    name: "Beneteau Oceanis 38.1",
-    price: 450000,
-    picture: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
+    name: "Maxum 2900 SE",
+    price: 120000,
+    picture: "https://boote.de/wp-content/uploads/2019/04/BILD0562.jpg",
   },
   {
     id: 4,
-    name: "Jeanneau Sun Odyssey 389",
-    price: 350000,
-    picture: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
+    name: "39 Express Coupe",
+    price: 180000,
+    picture:
+      "https://vnext.scdn4.secure.raxcdn.com/assets/cruisersyachts/images/models/39expresscoupe/gallery/11.jpg",
   },
   {
     id: 5,
-    name: "Tartan 4000",
-    price: 550000,
-    picture: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
+    name: "2014 Sunseeker Portofino 40",
+    price: 400000,
+    picture:
+      "https://images.boatsgroup.com/resize/1/68/1/9086801_20231013010733783_1_XLARGE.jpg",
   },
   {
     id: 6,
-    name: "Catalina 385",
-    price: 300000,
-    picture: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
+    name: "2012 Beneteau Oceanis 45",
+    price: 500000,
+    picture:
+      "https://images.boatsgroup.com/resize/1/82/15/8498215_20220916003106644_1_XLARGE.jpg",
   },
   {
     id: 7,
-    name: "Hunter 356",
-    price: 180000,
-    picture: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
+    name: "2019 Jeanneau Sun Odyssey 440",
+    price: 550000,
+    picture:
+      "https://images.boatsgroup.com/resize/1/1/36/8780136_20230328044113937_1_XLARGE.jpg",
   },
   {
     id: 8,
-    name: "Dufour 390 Grand Large",
-    price: 420000,
-    picture: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
+    name: "2006 Jeanneau Prestige 42",
+    price: 650000,
+    picture:
+      "https://images.boatsgroup.com/resize/1/58/40/8575840_20230123045851094_1_XLARGE.jpg",
   },
   {
     id: 9,
-    name: "Beneteau Swift Trawler 35",
-    price: 850000,
-    picture: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
+    name: "Azimut 50 Flybridge",
+    price: 800000,
+    picture:
+      "https://keyassets.timeincuk.net/inspirewp/live/wp-content/uploads/sites/18/2014/05/AZ50F_EXT2.jpg",
   },
   {
     id: 10,
-    name: "Ranger Tugs R-31",
-    price: 1200000,
-    picture: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
+    name: "Fairline Targa 48 ",
+    price: 950000,
+    picture:
+      "https://keyassets.timeincuk.net/inspirewp/live/wp-content/uploads/sites/18/2013/07/Targa_48_Open.jpg",
   },
   {
     id: 11,
-    name: "Sunseeker Manhattan 55",
-    price: 1500000,
-    picture: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
+    name: "2021 Ferretti Yachts 550",
+    price: 1200000,
+    picture:
+      "https://images.boatsgroup.com/resize/1/69/99/8256999_20220322080105777_1_XLARGE.jpg",
   },
   {
     id: 12,
-    name: "Ferretti 550",
-    price: 1800000,
-    picture: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
+    name: "Princess 60",
+    price: 1500000,
+    picture:
+      "http://www.princess.co.uk/wp-content/uploads/2013/05/IMG_29251.jpg",
   },
   {
     id: 13,
-    name: "Princess V65",
-    price: 2200000,
-    picture: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
+    name: "2022 Lagoon 46 ",
+    price: 2000000,
+    picture:
+      "https://images.boatsgroup.com/resize/1/99/18/8789918_20230401082907958_1_XLARGE.jpg",
   },
   {
     id: 14,
-    name: "Azimut 50 Fly",
-    price: 1300000,
-    picture: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
+    name: "2010 Sunseeker Predator 74",
+    price: 3000000,
+    picture:
+      "https://images.boatsgroup.com/resize/1/90/63/8909063_20230615174032647_1_XLARGE.jpg",
   },
   {
     id: 15,
-    name: "Pershing 5X",
-    price: 2500000,
-    picture: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
+    name: "2008 Mangusta 92",
+    price: 6000000,
+    picture:
+      "https://images.boatsgroup.com/images/1/23/66/8402366_20220915024846260_1_XLARGE.jpg",
   },
   {
     id: 16,
-    name: "Sailing Yacht Jeanneau Sun Odyssey 410",
-    price: 380000,
-    picture: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
+    name: "2024 Azimut 72 FLY",
+    price: 8000000,
+    picture:
+      "https://images.boatsgroup.com/resize/1/38/97/9223897_20240206050622118_1_XLARGE.jpg",
   },
   {
     id: 17,
-    name: "Beneteau Oceanis 41.1",
-    price: 420000,
-    picture: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
+    name: "30M BENETTI",
+    price: 12000000,
+    picture:
+      "https://www.charterworld.com/images/yachts-1/[MY-M-BENETTI-LUXURY-MOTOR-YACHT]-14881-1.png",
   },
   {
     id: 18,
-    name: "Dufour 390 Grand Large",
-    price: 440000,
-    picture: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
+    name: "Sanlorenzo Alloy 40M",
+    price: 15000000,
+    picture:
+      "https://www.ekkayachts.com/_next/image?url=%2Fcontent%2Fyachts%2Fyacht_769%2FyachtImage_cover_769_20262.jpg&w=3840&q=75",
   },
   {
     id: 19,
-    name: "Catalina 385",
-    price: 320000,
-    picture: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
+    name: "Heesen 40m",
+    price: 20000000,
+    picture: "https://slaylebrity.com/wp-content/uploads/2018/04/IMG_4499.jpg",
   },
   {
     id: 20,
-    name: "Hunter 376",
-    price: 200000,
-    picture: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
+    name: "Moon Sand Yacht Charter",
+    price: 35000000,
+    picture:
+      "https://origin.edmiston.com/lib/image/357f8d2a6950950611f32dce6dbda4d7e4f058bd/DJI_0397-2.JPG?x=1920&y=1080&crop",
   },
 ];
