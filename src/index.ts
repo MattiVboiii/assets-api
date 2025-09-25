@@ -9,7 +9,9 @@ import { planes } from "./planes.js";
 
 // Import helmet and rate limit with proper typing
 import { rateLimit } from "express-rate-limit";
-import helmet from "helmet";
+
+// Dynamic import for helmet to avoid ES module issues
+const helmet = (await import("helmet")).default;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,7 +22,7 @@ const app = express();
 app.set("trust proxy", 1);
 
 // Security middleware
-app.use(helmet());
+app.use((helmet as any)());
 
 // CORS configuration
 app.use(
