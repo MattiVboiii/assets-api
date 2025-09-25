@@ -1,6 +1,3 @@
-// These are prices from my home country in 2025
-// I spend some time listing these cars, and do not plan to update them frequently
-// If you want to have more up-to-date prices and pictures, consider doing it yourself and making a PR :)
 import { Asset } from "./types.js";
 
 export const cars: Asset[] = [
@@ -9,105 +6,105 @@ export const cars: Asset[] = [
     name: "Dacia Sandero",
     price: 12500,
     picture:
-      "https://mediacloud.carbuyer.co.uk/image/private/s--lMUCfxoM--/v1618394270/carbuyer/2021/04/Dacia%20Sandero%20Stepway%20hatchback%20-14.jpg",
+      "https://www.mad4wheels.com/img/free-car-images/mobile/11218/dacia-sandero-2013-357221.jpg",
   },
   {
     id: 2,
     name: "Toyota Aygo",
     price: 16500,
     picture:
-      "https://assets-eu-01.kc-usercontent.com/bb5aba31-d98c-0160-8548-418b3723c58e/43d1f367-a6ff-40b1-af2d-2dc6e0a0c929/Toyota%20Aygo%20(4).jpg",
+      "https://www.mad4wheels.com/img/free-car-images/mobile/9461/toyota-aygo-5-door-2012-328111.jpg",
   },
   {
     id: 3,
     name: "Renault Clio",
     price: 22000,
     picture:
-      "https://media.whatcar.com/wc-image/2024-04/renault-clio-front-right-static.jpg",
+      "https://www.mad4wheels.com/img/free-car-images/mobile/10828/renault-clio-2012-361741.jpg",
   },
   {
     id: 4,
     name: "Hyundai i20",
     price: 28000,
     picture:
-      "https://www.hyundai.com/eu/dam/sites/uk/model-page/new-i20/visualizers/dragon-red-pearl/BC3_ICE_EViz_EXT_5WR_DragonRedPearl_52910Q0330_SHOT1.jpg",
+      "https://www.mad4wheels.com/img/free-car-images/mobile/9955/hyundai-i20-2012-336904.jpg",
   },
   {
     id: 5,
     name: "VW Polo R-Line",
     price: 32000,
     picture:
-      "https://media.autoexpress.co.uk/image/private/s--2go69b6M--/t_content-image-full-desktop@2/v1562247289/autoexpress/2019/01/vw-polo-r-line-3.jpg",
+      "https://www.mad4wheels.com/img/free-car-images/mobile/8824/volkswagen-polo-r-line-2011-314767.jpg",
   },
   {
     id: 6,
     name: "Tesla Model 3",
     price: 40000,
     picture:
-      "https://www.teslarati.com/wp-content/uploads/2023/08/Tesla-model-3-highland-united-arab-emirates-release--2048x1210.jpg",
+      "https://www.mad4wheels.com/img/free-car-images/mobile/20650/tesla-model-3-2024-735780.jpg",
   },
   {
     id: 7,
     name: "VW Passat",
     price: 44000,
     picture:
-      "https://cdn.motor1.com/images/mgl/lE7Q7w/s1/vw-passat-variant-2024.jpg",
+      "https://www.mad4wheels.com/img/free-car-images/mobile/17063/volkswagen-passat-alltrack-2020-536072.jpg",
   },
   {
     id: 8,
     name: "Volvo XC60",
     price: 56000,
     picture:
-      "https://assets-eu-01.kc-usercontent.com/bb5aba31-d98c-0160-8548-418b3723c58e/32c94bbf-ddea-4434-83ca-989915dd7c70/Volvo%20XC60%20(10).jpg?fm=jpg&auto=format",
+      "https://www.mad4wheels.com/img/free-car-images/mobile/15886/volvo-xc60-2017-460167.jpg",
   },
   {
     id: 9,
     name: "BMW 3-Serie",
     price: 56000,
     picture:
-      "https://img.remediosdigitales.com/8663f4/bmw-serie-3-2023-precio-mexico_1/1366_2000.jpg",
+      "https://www.mad4wheels.com/img/free-car-images/mobile/17267/bmw-3er-g20-lwb-2020-542884.jpg",
   },
   {
     id: 10,
     name: "Ford Mustang Mach-E",
     price: 62000,
     picture:
-      "https://www.electrichunter.com/sites/default/files/field/gallery/Ford-Mustang-Mach-E-electric-SUV-2021-05.jpg",
+      "https://www.mad4wheels.com/img/free-car-images/mobile/17712/ford-mustang-mach-e-2021-577144.jpg",
   },
   {
     id: 11,
     name: "Audi A6",
     price: 68000,
     picture:
-      "https://paultan.org/image/2023/06/2024-Audi-A6-A7-facelift-debut-21.jpg",
+      "https://www.mad4wheels.com/img/free-car-images/mobile/21236/audi-a6-avant-e-tron-2025-770843.jpg",
   },
   {
     id: 12,
     name: "Range Rover Evoque",
     price: 80000,
     picture:
-      "https://www.hdcarwallpapers.com/walls/range_rover_evoque_p300e_s_2020_4k_4-HD.jpg",
+      "https://www.mad4wheels.com/img/free-car-images/mobile/18263/land-rover-range-rover-evoque-autobiography-2020-595139.jpg",
   },
   {
     id: 13,
     name: "Porsche Macan",
     price: 84500,
     picture:
-      "https://cdn.motor1.com/images/mgl/pbYN0P/s1/porsche-macan-rwd-2024.jpg",
+      "https://www.mad4wheels.com/img/free-car-images/mobile/20883/porsche-macan-4-2025-750980.jpg",
   },
   {
     id: 14,
     name: "BMW M4",
     price: 99500,
     picture:
-      "https://cimg1.ibsrv.net/ibimg/hgm/1920x1080-1/100/914/bmw-4-series_100914589.jpg",
+      "https://www.mad4wheels.com/img/free-car-images/mobile/20895/bmw-m4-g82-coupe-2025-751706.jpg",
   },
   {
     id: 15,
     name: "Tesla Model S Plaid",
     price: 110000,
     picture:
-      "https://cdn.motor1.com/images/mgl/Q12M1/s1/2021-tesla-model-s-plaid.jpg",
+      "https://www.mad4wheels.com/img/free-car-images/mobile/15966/tesla-model-s-p100d-by-prior-design-2017-462222.jpg",
   },
   // Got bored and gave up, lol.
   /* {
