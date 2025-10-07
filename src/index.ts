@@ -12,6 +12,9 @@ import { planes } from "./planes.js";
 // Import rate limit with proper typing
 import { rateLimit } from "express-rate-limit";
 
+// Import Postman collection
+import postmanCollection from "../public/postman-collection.json" with { type: "json" };
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -195,15 +198,18 @@ app.set("trust proxy", 1);
 // Security middleware - manual headers instead of helmet
 app.use((req, res, next) => {
   // Prevent MIME type sniffing
-  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader("X-Content-Type-Options", "nosniff");
   // Prevent clickjacking
-  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader("X-Frame-Options", "DENY");
   // Enable XSS protection
-  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader("X-XSS-Protection", "1; mode=block");
   // Prevent referrer leakage
-  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   // Content Security Policy
-  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:");
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:"
+  );
   next();
 });
 
@@ -252,7 +258,8 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Serve Postman collection
 app.get("/postman-collection.json", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/postman-collection.json"));
+  res.setHeader("Content-Type", "application/json");
+  res.json(postmanCollection);
 });
 
 function formatAssets(assets: any[]) {
