@@ -1,28 +1,211 @@
 import cors from "cors";
 import express from "express";
 import path from "path";
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
 import { fileURLToPath } from "url";
 import { boats } from "./boats.js";
 import { cars } from "./cars.js";
 import { houses } from "./houses.js";
 import { planes } from "./planes.js";
 
-// Import helmet and rate limit with proper typing
+// Import rate limit with proper typing
 import { rateLimit } from "express-rate-limit";
-
-// Dynamic import for helmet to avoid ES module issues
-const helmet = (await import("helmet")).default;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Swagger definition
+const swaggerDefinition = {
+  openapi: "3.0.0",
+  info: {
+    title: "Assets API",
+    version: "1.0.0",
+    description:
+      "API for managing various assets including cars, boats, houses, and planes",
+  },
+  servers: [
+    {
+      url: "http://localhost:3000",
+      description: "Development server",
+    },
+    {
+      url: "https://matti-assets-api.vercel.app",
+      description: "Production server",
+    },
+  ],
+  components: {
+    schemas: {
+      Asset: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+            description: "Unique identifier for the asset",
+          },
+          make: {
+            type: "string",
+            description: "Make of the asset",
+          },
+          model: {
+            type: "string",
+            description: "Model of the asset",
+          },
+          price: {
+            type: "number",
+            description: "Price of the asset in euros",
+          },
+          picture: {
+            type: "string",
+            description: "URL to the asset's picture",
+          },
+          type: {
+            type: "string",
+            enum: ["car", "boat", "house", "plane"],
+            description: "Type of asset (only included in combined endpoints)",
+          },
+        },
+        required: ["id", "make", "model", "price", "picture"],
+      },
+      Error: {
+        type: "object",
+        properties: {
+          error: {
+            type: "string",
+            description: "Error message",
+          },
+          message: {
+            type: "string",
+            description: "Detailed error message",
+          },
+          retryAfter: {
+            type: "string",
+            description: "Time to wait before retrying (for rate limiting)",
+          },
+        },
+      },
+      NotFound: {
+        type: "object",
+        properties: {
+          error: {
+            type: "string",
+            description: "Error message",
+          },
+        },
+      },
+    },
+    parameters: {
+      assetId: {
+        name: "id",
+        in: "path",
+        description: "ID of the asset",
+        required: true,
+        schema: {
+          type: "integer",
+        },
+      },
+      search: {
+        name: "search",
+        in: "query",
+        description: "Search term to filter assets by name, make, or model",
+        schema: {
+          type: "string",
+        },
+      },
+      minPrice: {
+        name: "min_price",
+        in: "query",
+        description: "Minimum price filter",
+        schema: {
+          type: "integer",
+          minimum: 0,
+        },
+      },
+      maxPrice: {
+        name: "max_price",
+        in: "query",
+        description: "Maximum price filter",
+        schema: {
+          type: "integer",
+          minimum: 0,
+        },
+      },
+      make: {
+        name: "make",
+        in: "query",
+        description: "Filter by make",
+        schema: {
+          type: "string",
+        },
+      },
+      model: {
+        name: "model",
+        in: "query",
+        description: "Filter by model",
+        schema: {
+          type: "string",
+        },
+      },
+      sort: {
+        name: "sort",
+        in: "query",
+        description: "Field to sort by",
+        schema: {
+          type: "string",
+          enum: ["price", "name", "id", "make", "model"],
+        },
+      },
+      order: {
+        name: "order",
+        in: "query",
+        description: "Sort order",
+        schema: {
+          type: "string",
+          enum: ["asc", "desc"],
+          default: "asc",
+        },
+      },
+      limit: {
+        name: "limit",
+        in: "query",
+        description: "Maximum number of results to return",
+        schema: {
+          type: "integer",
+          minimum: 1,
+          maximum: 1000,
+          default: 100,
+        },
+      },
+    },
+  },
+};
+
+const options = {
+  swaggerDefinition,
+  apis: ["./src/index.ts"], // Path to the API docs
+};
+
+const swaggerSpec = swaggerJsdoc(options);
 
 const app = express();
 
 // Trust proxy for rate limiting (important for Vercel deployment)
 app.set("trust proxy", 1);
 
-// Security middleware
-app.use((helmet as any)());
+// Security middleware - manual headers instead of helmet
+app.use((req, res, next) => {
+  // Prevent MIME type sniffing
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  // Prevent clickjacking
+  res.setHeader('X-Frame-Options', 'DENY');
+  // Enable XSS protection
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  // Prevent referrer leakage
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  // Content Security Policy
+  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:");
+  next();
+});
 
 // CORS configuration
 app.use(
@@ -64,6 +247,14 @@ const strictLimiter = rateLimit({
 // Serve static files from public directory
 app.use(express.static(path.join(__dirname, "../public")));
 
+// Swagger UI
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Serve Postman collection
+app.get("/postman-collection.json", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/postman-collection.json"));
+});
+
 function formatAssets(assets: any[]) {
   return assets.map((asset) => ({
     ...asset,
@@ -71,18 +262,48 @@ function formatAssets(assets: any[]) {
   }));
 }
 
+function getAssetName(asset: any) {
+  if (asset.make && asset.model) {
+    return `${asset.make} ${asset.model}`.trim();
+  } else if (asset.name) {
+    return asset.name;
+  } else {
+    return "";
+  }
+}
+
 function sortAndFilterAssets(assets: any[], query: any) {
   let filteredAssets = [...assets];
 
   // Input validation and sanitization
-  const allowedSortFields = ["price", "name", "id"];
+  const allowedSortFields = ["price", "name", "id", "make", "model"];
 
   // Search by name with validation
   if (query.search && typeof query.search === "string") {
     const searchTerm = query.search.toLowerCase().trim();
     if (searchTerm.length > 0 && searchTerm.length <= 100) {
       filteredAssets = filteredAssets.filter((asset) =>
-        asset.name.toLowerCase().includes(searchTerm)
+        getAssetName(asset).toLowerCase().includes(searchTerm)
+      );
+    }
+  }
+
+  // Filter by make
+  if (query.make && typeof query.make === "string") {
+    const makeTerm = query.make.toLowerCase().trim();
+    if (makeTerm.length > 0 && makeTerm.length <= 100) {
+      filteredAssets = filteredAssets.filter((asset) =>
+        asset.make.toLowerCase().includes(makeTerm)
+      );
+    }
+  }
+
+  // Filter by model
+  if (query.model && typeof query.model === "string") {
+    const modelTerm = query.model.toLowerCase().trim();
+    if (modelTerm.length > 0 && modelTerm.length <= 100) {
+      filteredAssets = filteredAssets.filter((asset) =>
+        asset.model.toLowerCase().includes(modelTerm)
       );
     }
   }
@@ -117,11 +338,17 @@ function sortAndFilterAssets(assets: any[], query: any) {
         aValue = a.price;
         bValue = b.price;
       } else if (sortBy === "name") {
-        aValue = a.name.toLowerCase();
-        bValue = b.name.toLowerCase();
+        aValue = getAssetName(a).toLowerCase();
+        bValue = getAssetName(b).toLowerCase();
       } else if (sortBy === "id") {
         aValue = a.id;
         bValue = b.id;
+      } else if (sortBy === "make") {
+        aValue = a.make.toLowerCase();
+        bValue = b.make.toLowerCase();
+      } else if (sortBy === "model") {
+        aValue = a.model.toLowerCase();
+        bValue = b.model.toLowerCase();
       } else {
         return 0; // No sorting if invalid sort field
       }
@@ -147,11 +374,68 @@ app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
+/**
+ * @swagger
+ * /api/cars:
+ *   get:
+ *     summary: Get all cars
+ *     description: Retrieve a list of all cars with optional filtering, sorting, and pagination
+ *     parameters:
+ *       - $ref: '#/components/parameters/search'
+ *       - $ref: '#/components/parameters/minPrice'
+ *       - $ref: '#/components/parameters/maxPrice'
+ *       - $ref: '#/components/parameters/sort'
+ *       - $ref: '#/components/parameters/order'
+ *       - $ref: '#/components/parameters/limit'
+ *     responses:
+ *       200:
+ *         description: A list of cars
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Asset'
+ *       429:
+ *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 app.get("/api/cars", (req, res) => {
   const sortedAndFiltered = sortAndFilterAssets(cars, req.query);
   res.json(formatAssets(sortedAndFiltered));
 });
 
+/**
+ * @swagger
+ * /api/cars/{id}:
+ *   get:
+ *     summary: Get a car by ID
+ *     description: Retrieve a specific car by its ID
+ *     parameters:
+ *       - $ref: '#/components/parameters/assetId'
+ *     responses:
+ *       200:
+ *         description: A car object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Asset'
+ *       404:
+ *         description: Car not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
+ *       429:
+ *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 app.get("/api/cars/:id", (req, res) => {
   const id = parseInt(req.params.id);
   const car = cars.find((c) => c.id === id);
@@ -162,11 +446,68 @@ app.get("/api/cars/:id", (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/boats:
+ *   get:
+ *     summary: Get all boats
+ *     description: Retrieve a list of all boats with optional filtering, sorting, and pagination
+ *     parameters:
+ *       - $ref: '#/components/parameters/search'
+ *       - $ref: '#/components/parameters/minPrice'
+ *       - $ref: '#/components/parameters/maxPrice'
+ *       - $ref: '#/components/parameters/sort'
+ *       - $ref: '#/components/parameters/order'
+ *       - $ref: '#/components/parameters/limit'
+ *     responses:
+ *       200:
+ *         description: A list of boats
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Asset'
+ *       429:
+ *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 app.get("/api/boats", (req, res) => {
   const sortedAndFiltered = sortAndFilterAssets(boats, req.query);
   res.json(formatAssets(sortedAndFiltered));
 });
 
+/**
+ * @swagger
+ * /api/boats/{id}:
+ *   get:
+ *     summary: Get a boat by ID
+ *     description: Retrieve a specific boat by its ID
+ *     parameters:
+ *       - $ref: '#/components/parameters/assetId'
+ *     responses:
+ *       200:
+ *         description: A boat object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Asset'
+ *       404:
+ *         description: Boat not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
+ *       429:
+ *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 app.get("/api/boats/:id", strictLimiter, (req, res) => {
   const id = parseInt(req.params.id);
   const boat = boats.find((b) => b.id === id);
@@ -177,11 +518,68 @@ app.get("/api/boats/:id", strictLimiter, (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/houses:
+ *   get:
+ *     summary: Get all houses
+ *     description: Retrieve a list of all houses with optional filtering, sorting, and pagination
+ *     parameters:
+ *       - $ref: '#/components/parameters/search'
+ *       - $ref: '#/components/parameters/minPrice'
+ *       - $ref: '#/components/parameters/maxPrice'
+ *       - $ref: '#/components/parameters/sort'
+ *       - $ref: '#/components/parameters/order'
+ *       - $ref: '#/components/parameters/limit'
+ *     responses:
+ *       200:
+ *         description: A list of houses
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Asset'
+ *       429:
+ *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 app.get("/api/houses", (req, res) => {
   const sortedAndFiltered = sortAndFilterAssets(houses, req.query);
   res.json(formatAssets(sortedAndFiltered));
 });
 
+/**
+ * @swagger
+ * /api/houses/{id}:
+ *   get:
+ *     summary: Get a house by ID
+ *     description: Retrieve a specific house by its ID
+ *     parameters:
+ *       - $ref: '#/components/parameters/assetId'
+ *     responses:
+ *       200:
+ *         description: A house object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Asset'
+ *       404:
+ *         description: House not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
+ *       429:
+ *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 app.get("/api/houses/:id", strictLimiter, (req, res) => {
   const id = parseInt(req.params.id);
   const house = houses.find((h) => h.id === id);
@@ -192,11 +590,68 @@ app.get("/api/houses/:id", strictLimiter, (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/planes:
+ *   get:
+ *     summary: Get all planes
+ *     description: Retrieve a list of all planes with optional filtering, sorting, and pagination
+ *     parameters:
+ *       - $ref: '#/components/parameters/search'
+ *       - $ref: '#/components/parameters/minPrice'
+ *       - $ref: '#/components/parameters/maxPrice'
+ *       - $ref: '#/components/parameters/sort'
+ *       - $ref: '#/components/parameters/order'
+ *       - $ref: '#/components/parameters/limit'
+ *     responses:
+ *       200:
+ *         description: A list of planes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Asset'
+ *       429:
+ *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 app.get("/api/planes", (req, res) => {
   const sortedAndFiltered = sortAndFilterAssets(planes, req.query);
   res.json(formatAssets(sortedAndFiltered));
 });
 
+/**
+ * @swagger
+ * /api/planes/{id}:
+ *   get:
+ *     summary: Get a plane by ID
+ *     description: Retrieve a specific plane by its ID
+ *     parameters:
+ *       - $ref: '#/components/parameters/assetId'
+ *     responses:
+ *       200:
+ *         description: A plane object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Asset'
+ *       404:
+ *         description: Plane not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
+ *       429:
+ *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 app.get("/api/planes/:id", strictLimiter, (req, res) => {
   const id = parseInt(req.params.id);
   const plane = planes.find((p) => p.id === id);
@@ -207,6 +662,42 @@ app.get("/api/planes/:id", strictLimiter, (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/assets:
+ *   get:
+ *     summary: Get all assets
+ *     description: Retrieve a combined list of all assets (cars, boats, houses, planes) with optional filtering, sorting, and pagination
+ *     parameters:
+ *       - $ref: '#/components/parameters/search'
+ *       - $ref: '#/components/parameters/minPrice'
+ *       - $ref: '#/components/parameters/maxPrice'
+ *       - $ref: '#/components/parameters/sort'
+ *       - $ref: '#/components/parameters/order'
+ *       - $ref: '#/components/parameters/limit'
+ *     responses:
+ *       200:
+ *         description: A list of all assets with type information
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 allOf:
+ *                   - $ref: '#/components/schemas/Asset'
+ *                   - type: object
+ *                     properties:
+ *                       type:
+ *                         type: string
+ *                         enum: [car, boat, house, plane]
+ *                         description: Type of asset
+ *       429:
+ *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 app.get("/api/assets", (req, res) => {
   // Combine all assets with type information
   const allAssets = [
@@ -224,19 +715,8 @@ app.get("/api/assets", (req, res) => {
 app.use((req, res) => {
   res.status(404).json({
     error: "Endpoint not found",
-    message: "The requested resource does not exist",
-    availableEndpoints: [
-      "GET /",
-      "GET /api/cars",
-      "GET /api/cars/:id",
-      "GET /api/boats",
-      "GET /api/boats/:id",
-      "GET /api/houses",
-      "GET /api/houses/:id",
-      "GET /api/planes",
-      "GET /api/planes/:id",
-      "GET /api/assets",
-    ],
+    message:
+      "The requested resource does not exist. Check /api-docs for available endpoints.",
   });
 });
 

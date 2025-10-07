@@ -1,0 +1,245 @@
+{
+  "info": {
+    "name": "Assets API",
+    "description": "API for managing various assets including cars, boats, houses, and planes",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "assets-api"
+  },
+  "item": [
+    {
+      "name": "Cars",
+      "item": [
+        {
+          "name": "Get All Cars",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cars",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cars"]
+            },
+            "description": "Retrieve a list of all cars with optional filtering, sorting, and pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Car by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cars/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cars", "1"]
+            },
+            "description": "Retrieve a specific car by its ID"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Boats",
+      "item": [
+        {
+          "name": "Get All Boats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/boats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "boats"]
+            },
+            "description": "Retrieve a list of all boats with optional filtering, sorting, and pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Boat by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/boats/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "boats", "1"]
+            },
+            "description": "Retrieve a specific boat by its ID"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Houses",
+      "item": [
+        {
+          "name": "Get All Houses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/houses",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "houses"]
+            },
+            "description": "Retrieve a list of all houses with optional filtering, sorting, and pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Get House by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/houses/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "houses", "1"]
+            },
+            "description": "Retrieve a specific house by its ID"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Planes",
+      "item": [
+        {
+          "name": "Get All Planes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/planes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "planes"]
+            },
+            "description": "Retrieve a list of all planes with optional filtering, sorting, and pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Plane by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/planes/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "planes", "1"]
+            },
+            "description": "Retrieve a specific plane by its ID"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "All Assets",
+      "item": [
+        {
+          "name": "Get All Assets",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/assets",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "assets"]
+            },
+            "description": "Retrieve a combined list of all assets (cars, boats, houses, planes) with optional filtering, sorting, and pagination"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Examples",
+      "item": [
+        {
+          "name": "Cars - Sorted by Price",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cars?sort=price&order=asc",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cars"],
+              "query": [
+                {
+                  "key": "sort",
+                  "value": "price"
+                },
+                {
+                  "key": "order",
+                  "value": "asc"
+                }
+              ]
+            },
+            "description": "Get cars sorted by price (lowest first)"
+          },
+          "response": []
+        },
+        {
+          "name": "Boats - Price Range",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/boats?min_price=100000&max_price=500000",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "boats"],
+              "query": [
+                {
+                  "key": "min_price",
+                  "value": "100000"
+                },
+                {
+                  "key": "max_price",
+                  "value": "500000"
+                }
+              ]
+            },
+            "description": "Get boats within a specific price range"
+          },
+          "response": []
+        },
+        {
+          "name": "Assets - Search",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/assets?search=toyota&limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "assets"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "toyota"
+                },
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
+              ]
+            },
+            "description": "Search for assets by name and limit results"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ]
+}

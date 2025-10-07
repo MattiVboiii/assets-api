@@ -1,6 +1,7 @@
 export interface Asset {
   id: number;
-  name: string;
+  make: string;
+  model: string;
   price: number;
   picture: string;
 }

@@ -3,49 +3,56 @@ import { Asset } from "./types.js";
 export const houses: Asset[] = [
   {
     id: 1,
-    name: "Microstudio",
-    price: 20000,
-    picture:
-      "https://offgridworld.com/wp-content/uploads/2019/07/off-grid-tiny-house-perfection-5.jpg",
-  },
-  {
-    id: 2,
-    name: "Cedar Mountain Tiny House",
-    price: 350000,
-    picture:
-      "https://tinyhousetalk.com/wp-content/uploads/Cedar-Mountain-Tiny-House-001.jpg",
-  },
-  {
-    id: 3,
-    name: "Garden Studio",
-    price: 50000,
-    picture:
-      "https://hayestimberbuildings.co.uk/wp-content/uploads/2023/02/Wooden-Garden-Studio-Building.jpg",
-  },
-  {
-    id: 4,
-    name: "1-Room City House",
+    make: "1-Room",
+    model: "City House",
     price: 70000,
     picture:
       "https://www.peanbuiten.nl/wp-content/uploads/2023/09/DJI_0392-HDR-1-scaled.jpg",
   },
   {
-    id: 5,
-    name: "Funda House",
-    price: 95000,
-    picture:
-      "https://man-man.nl/app/uploads/2023/05/vrijstaande-woning-opknapper.jpg",
-  },
-  {
-    id: 6,
-    name: "2-Room Apartment",
+    id: 2,
+    make: "2-Room",
+    model: "Apartment",
     price: 120000,
     picture:
       "https://i.pinimg.com/originals/cd/f8/ac/cdf8acfd7a6ebb0ba9fa09ad43e47729.jpg",
   },
   {
+    id: 3,
+    make: "Cedar",
+    model: "Mountain Tiny House",
+    price: 350000,
+    picture:
+      "https://tinyhousetalk.com/wp-content/uploads/Cedar-Mountain-Tiny-House-001.jpg",
+  },
+  {
+    id: 4,
+    make: "Funda",
+    model: "House",
+    price: 95000,
+    picture:
+      "https://man-man.nl/app/uploads/2023/05/vrijstaande-woning-opknapper.jpg",
+  },
+  {
+    id: 5,
+    make: "Garden",
+    model: "Studio",
+    price: 50000,
+    picture:
+      "https://hayestimberbuildings.co.uk/wp-content/uploads/2023/02/Wooden-Garden-Studio-Building.jpg",
+  },
+  {
+    id: 6,
+    make: "Microstudio",
+    model: "",
+    price: 20000,
+    picture:
+      "https://offgridworld.com/wp-content/uploads/2019/07/off-grid-tiny-house-perfection-5.jpg",
+  },
+  {
     id: 7,
-    name: "Starter Home",
+    make: "Starter",
+    model: "Home",
     price: 150000,
     picture:
       "https://www.meerthuis.nl/wp-content/uploads/2022/02/2021-12-09-camera01-zwarte_steen-HR-def-20211215-scaled-1024x724.jpg",

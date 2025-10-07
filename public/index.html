@@ -13,309 +13,125 @@
         padding: 20px;
         background-color: #f5f5f5;
         color: #333;
+        text-align: center;
       }
       .container {
         background: white;
-        padding: 30px;
+        padding: 40px;
         border-radius: 10px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       }
       h1 {
         color: #2c3e50;
-        text-align: center;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
       }
-      .endpoint {
-        background: #f8f9fa;
-        border: 1px solid #e9ecef;
-        border-radius: 5px;
-        padding: 15px;
-        margin: 15px 0;
-      }
-      .endpoint h3 {
-        margin: 0 0 10px 0;
-        color: #495057;
-      }
-      .method {
+      .api-link {
+        display: inline-block;
         background: #007bff;
         color: white;
-        padding: 2px 8px;
-        border-radius: 3px;
-        font-size: 12px;
-        font-weight: bold;
-      }
-      .url {
-        font-family: "Courier New", monospace;
-        background: #f1f3f4;
-        padding: 5px 10px;
-        border-radius: 3px;
-        margin: 5px 0;
-      }
-      .url a {
-        color: #007bff;
+        padding: 15px 30px;
         text-decoration: none;
+        border-radius: 5px;
+        font-size: 18px;
+        margin: 20px 0;
+        transition: background-color 0.3s;
       }
-      .url a:hover {
-        text-decoration: underline;
+      .api-link:hover {
+        background: #0056b3;
       }
-      .example code {
-        background: #f1f3f4;
-        padding: 2px 4px;
-        border-radius: 3px;
-        font-family: "Courier New", monospace;
-      }
-      .example a {
-        color: #007bff;
+      .postman-link {
+        display: inline-block;
+        background: #ff6c37;
+        color: white;
+        padding: 15px 30px;
         text-decoration: none;
-      }
-      .example a:hover {
-        text-decoration: underline;
-      }
-      .note {
-        background: #fff3cd;
-        border: 1px solid #ffeaa7;
         border-radius: 5px;
-        padding: 15px;
+        font-size: 18px;
         margin: 20px 0;
+        transition: background-color 0.3s;
       }
-      .rednotice {
-        background: #f8d7da;
-        border: 1px solid #f5c6cb;
-        padding: 15px;
+      .postman-link:hover {
+        background: #e55a2b;
+      }
+      .description {
+        font-size: 16px;
+        line-height: 1.6;
         margin: 20px 0;
-        border-radius: 5px;
       }
     </style>
   </head>
   <body>
     <div class="container">
       <h1>🚗 Assets API</h1>
-      <p>
+      <p class="description">
         Welcome to the Assets API! This API provides information about various
         assets including cars, boats, houses, and planes with their prices
         formatted in European style.
       </p>
-
-      <div class="note">
-        <strong>Note:</strong> All prices are displayed with European number
-        formatting (using periods as thousands separators, e.g., 10.000 instead
-        of 10000).
+      <a href="/api-docs" class="api-link">📖 View API Documentation</a>
+      <div style="margin: 20px 0">
+        <button
+          id="postman-button"
+          class="postman-link"
+          style="border: none; cursor: pointer"
+        >
+          📮 Import to Postman
+        </button>
+        <br />
+        <small style="color: #666; font-size: 12px"
+          >Development: Downloads JSON file • Production: Opens in
+          Postman</small
+        >
+        <br />
+        <a
+          href="/postman-collection.json"
+          download
+          style="color: #666; font-size: 14px; text-decoration: underline"
+          >Direct Download</a
+        >
       </div>
-
-      <div class="rednotice">
-        <strong>Notice:</strong> I took some time making this API, it's
-        something simple I wanted to re-use for myself, but I thought "Why not
-        make it public?", but high chance will be that I won't update it, unless
-        something is broken.
-      </div>
-
-      <div class="note">
-        <strong>Security:</strong> This API includes rate limiting (100 requests
-        per 15 minutes), CORS protection, security headers, and input validation
-        to prevent abuse and ensure safe usage.
-      </div>
-
-      <h2>Available Endpoints</h2>
-
-      <div class="endpoint">
-        <h3><span class="method">GET</span> /cars</h3>
-        <p>Get a list of available cars with their details and prices.</p>
-        <div class="url"><a href="/cars" target="_blank">GET /cars</a></div>
-        <div class="example">
-          <strong>Example Response:</strong><br />
-          [<br />
-          &nbsp;&nbsp;{<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;"id": 1,<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;"name": "Dacia Sandero",<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;"price": "12.500",<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;"picture": "https://..."<br />
-          &nbsp;&nbsp;}<br />
-          ]
-        </div>
-      </div>
-
-      <div class="endpoint">
-        <h3><span class="method">GET</span> /cars/:id</h3>
-        <p>Get a specific car by its ID.</p>
-        <div class="url"><a href="/cars/1" target="_blank">GET /cars/1</a></div>
-        <div class="example">
-          <strong>Example Response:</strong><br />
-          {<br />
-          &nbsp;&nbsp;"id": 1,<br />
-          &nbsp;&nbsp;"name": "Dacia Sandero",<br />
-          &nbsp;&nbsp;"price": "12.500",<br />
-          &nbsp;&nbsp;"picture": "https://..."<br />
-          }
-        </div>
-      </div>
-
-      <div class="endpoint">
-        <h3><span class="method">GET</span> /boats</h3>
-        <p>Get a list of available boats with their details and prices.</p>
-        <div class="url"><a href="/boats" target="_blank">GET /boats</a></div>
-        <div class="example">
-          <strong>Example Response:</strong><br />
-          [<br />
-          &nbsp;&nbsp;{<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;"id": 1,<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;"name": "RIB 5–7m",<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;"price": "70.000",<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;"picture": "https://..."<br />
-          &nbsp;&nbsp;}<br />
-          ]
-        </div>
-      </div>
-
-      <div class="endpoint">
-        <h3><span class="method">GET</span> /boats/:id</h3>
-        <p>Get a specific boat by its ID.</p>
-        <div class="url">
-          <a href="/boats/1" target="_blank">GET /boats/1</a>
-        </div>
-        <div class="example">
-          <strong>Example Response:</strong><br />
-          {<br />
-          &nbsp;&nbsp;"id": 1,<br />
-          &nbsp;&nbsp;"name": "RIB 5–7m",<br />
-          &nbsp;&nbsp;"price": "70.000",<br />
-          &nbsp;&nbsp;"picture": "https://..."<br />
-          }
-        </div>
-      </div>
-
-      <div class="endpoint">
-        <h3><span class="method">GET</span> /houses</h3>
-        <p>Get a list of available houses with their details and prices.</p>
-        <div class="url"><a href="/houses" target="_blank">GET /houses</a></div>
-      </div>
-
-      <div class="endpoint">
-        <h3><span class="method">GET</span> /houses/:id</h3>
-        <p>Get a specific house by its ID.</p>
-        <div class="url">
-          <a href="/houses/1" target="_blank">GET /houses/1</a>
-        </div>
-      </div>
-
-      <div class="endpoint">
-        <h3><span class="method">GET</span> /planes</h3>
-        <p>Get a list of available planes with their details and prices.</p>
-        <div class="url"><a href="/planes" target="_blank">GET /planes</a></div>
-      </div>
-
-      <div class="endpoint">
-        <h3><span class="method">GET</span> /planes/:id</h3>
-        <p>Get a specific plane by its ID.</p>
-        <div class="url">
-          <a href="/planes/1" target="_blank">GET /planes/1</a>
-        </div>
-      </div>
-
-      <div class="endpoint">
-        <h3><span class="method">GET</span> /assets</h3>
-        <p>
-          Get all assets from all categories (cars, boats, houses, planes) in
-          one list.
-        </p>
-        <div class="url"><a href="/assets" target="_blank">GET /assets</a></div>
-        <div class="example">
-          <strong>Example Response:</strong><br />
-          [<br />
-          &nbsp;&nbsp;{<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;"id": 1,<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;"name": "Dacia Sandero",<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;"price": "12.500",<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;"picture": "https://...",<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;"type": "car"<br />
-          &nbsp;&nbsp;},<br />
-          &nbsp;&nbsp;{<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;"id": 1,<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;"name": "RIB 5–7m",<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;"price": "70.000",<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;"picture": "https://...",<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;"type": "boat"<br />
-          &nbsp;&nbsp;}<br />
-          ]
-        </div>
-      </div>
-
-      <h2>Query Parameters</h2>
-      <p>
-        You can use query parameters to sort, filter, and limit the results from
-        list endpoints:
+      <p class="description">
+        Complete API documentation with interactive examples is available
+        through Swagger UI.
       </p>
-
-      <h3>Sorting</h3>
-      <ul>
-        <li><code>sort=price</code> - Sort by price</li>
-        <li><code>sort=name</code> - Sort by name (alphabetical)</li>
-        <li><code>sort=id</code> - Sort by ID</li>
-        <li><code>order=asc</code> - Sort in ascending order (default)</li>
-        <li><code>order=desc</code> - Sort in descending order</li>
-      </ul>
-
-      <h3>Searching</h3>
-      <ul>
-        <li>
-          <code>search=toyota</code> - Search assets by name (case-insensitive)
-        </li>
-      </ul>
-
-      <h3>Filtering</h3>
-      <ul>
-        <li>
-          <code>min_price=50000</code> - Show only assets with price >= 50,000
-        </li>
-        <li>
-          <code>max_price=100000</code> - Show only assets with price <= 100,000
-        </li>
-      </ul>
-
-      <h3>Limiting</h3>
-      <ul>
-        <li><code>limit=5</code> - Limit results to first 5 items</li>
-      </ul>
-
-      <div class="example">
-        <strong>Examples:</strong><br />
-        <a href="/cars?sort=price&order=asc" target="_blank"
-          ><code>GET /cars?sort=price&order=asc</code></a
-        >
-        - Cars sorted by price (lowest first)<br />
-        <a href="/boats?min_price=100000&max_price=500000" target="_blank"
-          ><code>GET /boats?min_price=100000&max_price=500000</code></a
-        >
-        - Boats between 100k-500k<br />
-        <a href="/houses?sort=name&limit=3" target="_blank"
-          ><code>GET /houses?sort=name&limit=3</code></a
-        >
-        - First 3 houses alphabetically<br />
-        <a href="/planes?search=cessna" target="_blank"
-          ><code>GET /planes?search=cessna</code></a
-        >
-        - Planes with "cessna" in the name<br />
-        <a href="/assets?sort=price&order=desc&limit=10" target="_blank"
-          ><code>GET /assets?sort=price&order=desc&limit=10</code></a
-        >
-        - Top 10 most expensive assets from all categories
-      </div>
-
-      <h2>Response Format</h2>
-      <p>
-        Each endpoint returns an array of asset objects with the following
-        structure:
-      </p>
-      <div class="example">
-        {<br />
-        &nbsp;&nbsp;"id": number,<br />
-        &nbsp;&nbsp;"name": string,<br />
-        &nbsp;&nbsp;"price": string, // Formatted with European thousands
-        separator<br />
-        &nbsp;&nbsp;"picture": string, // URL to asset image<br />
-        &nbsp;&nbsp;"type": string // Only included in /assets endpoint ("car",
-        "boat", "house", "plane")<br />
-        }
-      </div>
     </div>
+    <script>
+      function importToPostman() {
+        // For localhost, provide direct download since Postman web can't access localhost
+        if (
+          window.location.hostname === "localhost" ||
+          window.location.hostname === "127.0.0.1"
+        ) {
+          // Create a temporary link to download the file
+          const link = document.createElement("a");
+          link.href = "/postman-collection.json";
+          link.download = "assets-api-postman-collection.json";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+          // Show a message to the user
+          alert(
+            "Collection downloaded! Please import the JSON file into Postman manually."
+          );
+        } else {
+          // For production, use the Postman web import
+          const baseUrl = window.location.origin;
+          const collectionUrl = `${baseUrl}/postman-collection.json`;
+          const postmanImportUrl = `https://www.postman.com/collections/import-from-url?url=${encodeURIComponent(
+            collectionUrl
+          )}`;
+          window.open(postmanImportUrl, "_blank");
+        }
+      }
+
+      // Add event listener when DOM is loaded
+      document.addEventListener("DOMContentLoaded", function () {
+        const postmanButton = document.getElementById("postman-button");
+        if (postmanButton) {
+          postmanButton.addEventListener("click", importToPostman);
+        }
+      });
+    </script>
   </body>
 </html>
