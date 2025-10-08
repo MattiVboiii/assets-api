@@ -1,5 +1,6 @@
 import cors from "cors";
 import express from "express";
+import fs from "fs";
 import path from "path";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
@@ -12,11 +13,17 @@ import { planes } from "./planes.js";
 // Import rate limit with proper typing
 import { rateLimit } from "express-rate-limit";
 
-// Import Postman collection
-import postmanCollection from "../public/postman-collection.json" with { type: "json" };
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Load Postman collection
+const postmanCollectionPath = path.join(
+  __dirname,
+  "../public/postman-collection.json"
+);
+const postmanCollection = JSON.parse(
+  fs.readFileSync(postmanCollectionPath, "utf-8")
+);
 
 // Swagger definition
 const swaggerDefinition = {
