@@ -70,24 +70,16 @@
       </p>
       <a href="/api-docs" class="api-link">📖 View API Documentation</a>
       <div style="margin: 20px 0">
-        <button
-          id="postman-button"
-          class="postman-link"
-          style="border: none; cursor: pointer"
-        >
-          📮 Import to Postman
-        </button>
-        <br />
-        <small style="color: #666; font-size: 12px"
-          >Development: Downloads JSON file • Production: Opens in
-          Postman</small
-        >
-        <br />
         <a
           href="/postman-collection.json"
-          download
-          style="color: #666; font-size: 14px; text-decoration: underline"
-          >Direct Download</a
+          download="assets-api-postman-collection.json"
+          class="postman-link"
+        >
+          📮 Download Postman Collection
+        </a>
+        <br />
+        <small style="color: #666; font-size: 12px"
+          >Download the JSON file and import it into Postman manually</small
         >
       </div>
       <p class="description">
@@ -95,43 +87,5 @@
         through Swagger UI.
       </p>
     </div>
-    <script>
-      function importToPostman() {
-        // For localhost, provide direct download since Postman web can't access localhost
-        if (
-          window.location.hostname === "localhost" ||
-          window.location.hostname === "127.0.0.1"
-        ) {
-          // Create a temporary link to download the file
-          const link = document.createElement("a");
-          link.href = "/postman-collection.json";
-          link.download = "assets-api-postman-collection.json";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-
-          // Show a message to the user
-          alert(
-            "Collection downloaded! Please import the JSON file into Postman manually."
-          );
-        } else {
-          // For production, use the Postman web import
-          const baseUrl = window.location.origin;
-          const collectionUrl = `${baseUrl}/postman-collection.json`;
-          const postmanImportUrl = `https://www.postman.com/collections/import-from-url?url=${encodeURIComponent(
-            collectionUrl
-          )}`;
-          window.open(postmanImportUrl, "_blank");
-        }
-      }
-
-      // Add event listener when DOM is loaded
-      document.addEventListener("DOMContentLoaded", function () {
-        const postmanButton = document.getElementById("postman-button");
-        if (postmanButton) {
-          postmanButton.addEventListener("click", importToPostman);
-        }
-      });
-    </script>
   </body>
 </html>
