@@ -3,17 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Assets API - Welcome</title>
+    <title>Assets API Documentation</title>
     <style>
       body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           sans-serif;
-        max-width: 800px;
+        max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
         background-color: #f5f5f5;
         color: #333;
-        text-align: center;
+        line-height: 1.6;
       }
       .container {
         background: white;
@@ -24,20 +24,95 @@
       h1 {
         color: #2c3e50;
         margin-bottom: 20px;
+        text-align: center;
       }
-      .api-link {
-        display: inline-block;
-        background: #007bff;
-        color: white;
-        padding: 15px 30px;
-        text-decoration: none;
+      h2 {
+        color: #34495e;
+        margin-top: 40px;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #ecf0f1;
+        padding-bottom: 10px;
+      }
+      h3 {
+        color: #7f8c8d;
+        margin-top: 30px;
+        margin-bottom: 10px;
+      }
+      .description {
+        margin-bottom: 10px;
+      }
+      .params {
+        margin-left: 20px;
+      }
+      .param {
+        margin: 5px 0;
+        font-size: 14px;
+      }
+      .param-name {
+        font-weight: bold;
+        color: #495057;
+      }
+      .param-type {
+        color: #6c757d;
+        font-style: italic;
+      }
+      .example {
+        background: #f1f3f4;
+        padding: 15px;
         border-radius: 5px;
-        font-size: 18px;
-        margin: 20px 0;
-        transition: background-color 0.3s;
+        margin: 10px 0;
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+        overflow-x: auto;
       }
-      .api-link:hover {
-        background: #0056b3;
+      .response {
+        background: #d4edda;
+        border: 1px solid #c3e6cb;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 10px 0;
+      }
+      .error {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 10px 0;
+      }
+      details {
+        margin: 20px 0;
+      }
+      summary {
+        background: #f8f9fa;
+        border-left: 4px solid #007bff;
+        padding: 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        color: #007bff;
+        font-size: 16px;
+        list-style: none;
+      }
+      summary:hover {
+        background: #e9ecef;
+      }
+      summary::-webkit-details-marker {
+        display: none;
+      }
+      summary::before {
+        content: "▶";
+        margin-right: 10px;
+        transition: transform 0.2s;
+      }
+      details[open] summary::before {
+        transform: rotate(90deg);
+      }
+      .endpoint-content {
+        background: #f8f9fa;
+        border-left: 4px solid #007bff;
+        padding: 15px;
+        margin-top: 5px;
+        border-radius: 0 0 5px 5px;
       }
       .postman-link {
         display: inline-block;
@@ -53,38 +128,461 @@
       .postman-link:hover {
         background: #e55a2b;
       }
-      .description {
-        font-size: 16px;
-        line-height: 1.6;
-        margin: 20px 0;
-      }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>🚗 Assets API</h1>
-      <p class="description">
+      <h1>🚗 Assets API Documentation</h1>
+      <p>
         Welcome to the Assets API! This API provides information about various
-        assets including cars, boats, houses, and planes with their prices
+        assets including cars, boats, houses, and planes. All prices are
         formatted in European style.
       </p>
-      <a href="/api-docs" class="api-link">📖 View API Documentation</a>
-      <div style="margin: 20px 0">
-        <a
-          href="/postman-collection.json"
-          download="assets-api-postman-collection.json"
-          class="postman-link"
-        >
-          📮 Download Postman Collection
-        </a>
-        <br />
-        <small style="color: #666; font-size: 12px"
-          >Download the JSON file and import it into Postman manually</small
+
+      <a
+        href="/postman-collection.json"
+        download="assets-api-postman-collection.json"
+        class="postman-link"
+      >
+        📮 Download Postman Collection
+      </a>
+
+      <h2>Base URL</h2>
+      <p>
+        The API is available at:
+        <code>https://matti-assets-api.vercel.app</code>
+      </p>
+
+      <h2>Endpoints</h2>
+
+      <h3>Cars</h3>
+
+      <details>
+        <summary>GET /api/cars</summary>
+        <div class="endpoint-content">
+          <div class="description">Retrieve a list of all cars.</div>
+          <div class="params">
+            <div class="param">
+              <span class="param-name">limit</span>
+              <span class="param-type"
+                >(optional, integer, default: 100, max: 1000)</span
+              ><br />
+              Maximum number of results to return.
+            </div>
+            <div class="param">
+              <span class="param-name">offset</span>
+              <span class="param-type">(optional, integer, default: 0)</span
+              ><br />
+              Number of results to skip for pagination.
+            </div>
+          </div>
+          <div class="example">
+            Example Request:<br />
+            GET /api/cars?limit=10&offset=0
+          </div>
+          <div class="response">
+            Success Response (200):<br />
+            <pre>
+{
+  "data": [
+    {
+      "id": 1,
+      "make": "Toyota",
+      "model": "Corolla",
+      "price": "20.000,00 €",
+      "picture": "https://example.com/car.jpg"
+    }
+  ],
+  "total": 50,
+  "limit": 10,
+  "offset": 0
+}</pre
+            >
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>GET /api/cars/{id}</summary>
+        <div class="endpoint-content">
+          <div class="description">Retrieve a specific car by its ID.</div>
+          <div class="params">
+            <div class="param">
+              <span class="param-name">id</span>
+              <span class="param-type">(required, integer)</span><br />
+              The ID of the car to retrieve.
+            </div>
+          </div>
+          <div class="example">
+            Example Request:<br />
+            GET /api/cars/1
+          </div>
+          <div class="response">
+            Success Response (200):<br />
+            <pre>
+{
+  "id": 1,
+  "make": "Toyota",
+  "model": "Corolla",
+  "price": "20.000,00 €",
+  "picture": "https://example.com/car.jpg"
+}</pre
+            >
+          </div>
+          <div class="error">
+            Error Response (404):<br />
+            <pre>
+{
+  "error": "Not Found",
+  "message": "Car with id 999 not found"
+}</pre
+            >
+          </div>
+        </div>
+      </details>
+
+      <h3>Boats</h3>
+
+      <details>
+        <summary>GET /api/boats</summary>
+        <div class="endpoint-content">
+          <div class="description">Retrieve a list of all boats.</div>
+          <div class="params">
+            <div class="param">
+              <span class="param-name">limit</span>
+              <span class="param-type"
+                >(optional, integer, default: 100, max: 1000)</span
+              ><br />
+              Maximum number of results to return.
+            </div>
+            <div class="param">
+              <span class="param-name">offset</span>
+              <span class="param-type">(optional, integer, default: 0)</span
+              ><br />
+              Number of results to skip for pagination.
+            </div>
+          </div>
+          <div class="example">
+            Example Request:<br />
+            GET /api/boats?limit=5
+          </div>
+          <div class="response">
+            Success Response (200):<br />
+            <pre>
+{
+  "data": [
+    {
+      "id": 1,
+      "make": "Bayliner",
+      "model": "Element",
+      "price": "150.000,00 €",
+      "picture": "https://example.com/boat.jpg"
+    }
+  ],
+  "total": 25,
+  "limit": 5,
+  "offset": 0
+}</pre
+            >
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>GET /api/boats/{id}</summary>
+        <div class="endpoint-content">
+          <div class="description">Retrieve a specific boat by its ID.</div>
+          <div class="params">
+            <div class="param">
+              <span class="param-name">id</span>
+              <span class="param-type">(required, integer)</span><br />
+              The ID of the boat to retrieve.
+            </div>
+          </div>
+          <div class="example">
+            Example Request:<br />
+            GET /api/boats/1
+          </div>
+          <div class="response">
+            Success Response (200):<br />
+            <pre>
+{
+  "id": 1,
+  "make": "Bayliner",
+  "model": "Element",
+  "price": "150.000,00 €",
+  "picture": "https://example.com/boat.jpg"
+}</pre
+            >
+          </div>
+          <div class="error">
+            Error Response (404):<br />
+            <pre>
+{
+  "error": "Not Found",
+  "message": "Boat with id 999 not found"
+}</pre
+            >
+          </div>
+        </div>
+      </details>
+
+      <h3>Houses</h3>
+
+      <details>
+        <summary>GET /api/houses</summary>
+        <div class="endpoint-content">
+          <div class="description">Retrieve a list of all houses.</div>
+          <div class="params">
+            <div class="param">
+              <span class="param-name">limit</span>
+              <span class="param-type"
+                >(optional, integer, default: 100, max: 1000)</span
+              ><br />
+              Maximum number of results to return.
+            </div>
+            <div class="param">
+              <span class="param-name">offset</span>
+              <span class="param-type">(optional, integer, default: 0)</span
+              ><br />
+              Number of results to skip for pagination.
+            </div>
+          </div>
+          <div class="example">
+            Example Request:<br />
+            GET /api/houses?limit=20&offset=10
+          </div>
+          <div class="response">
+            Success Response (200):<br />
+            <pre>
+{
+  "data": [
+    {
+      "id": 1,
+      "make": "Modern",
+      "model": "Villa",
+      "price": "500.000,00 €",
+      "picture": "https://example.com/house.jpg"
+    }
+  ],
+  "total": 100,
+  "limit": 20,
+  "offset": 10
+}</pre
+            >
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>GET /api/houses/{id}</summary>
+        <div class="endpoint-content">
+          <div class="description">Retrieve a specific house by its ID.</div>
+          <div class="params">
+            <div class="param">
+              <span class="param-name">id</span>
+              <span class="param-type">(required, integer)</span><br />
+              The ID of the house to retrieve.
+            </div>
+          </div>
+          <div class="example">
+            Example Request:<br />
+            GET /api/houses/1
+          </div>
+          <div class="response">
+            Success Response (200):<br />
+            <pre>
+{
+  "id": 1,
+  "make": "Modern",
+  "model": "Villa",
+  "price": "500.000,00 €",
+  "picture": "https://example.com/house.jpg"
+}</pre
+            >
+          </div>
+          <div class="error">
+            Error Response (404):<br />
+            <pre>
+{
+  "error": "Not Found",
+  "message": "House with id 999 not found"
+}</pre
+            >
+          </div>
+        </div>
+      </details>
+
+      <h3>Planes</h3>
+
+      <details>
+        <summary>GET /api/planes</summary>
+        <div class="endpoint-content">
+          <div class="description">Retrieve a list of all planes.</div>
+          <div class="params">
+            <div class="param">
+              <span class="param-name">limit</span>
+              <span class="param-type"
+                >(optional, integer, default: 100, max: 1000)</span
+              ><br />
+              Maximum number of results to return.
+            </div>
+            <div class="param">
+              <span class="param-name">offset</span>
+              <span class="param-type">(optional, integer, default: 0)</span
+              ><br />
+              Number of results to skip for pagination.
+            </div>
+          </div>
+          <div class="example">
+            Example Request:<br />
+            GET /api/planes?limit=50
+          </div>
+          <div class="response">
+            Success Response (200):<br />
+            <pre>
+{
+  "data": [
+    {
+      "id": 1,
+      "make": "Cessna",
+      "model": "172",
+      "price": "300.000,00 €",
+      "picture": "https://example.com/plane.jpg"
+    }
+  ],
+  "total": 75,
+  "limit": 50,
+  "offset": 0
+}</pre
+            >
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>GET /api/planes/{id}</summary>
+        <div class="endpoint-content">
+          <div class="description">Retrieve a specific plane by its ID.</div>
+          <div class="params">
+            <div class="param">
+              <span class="param-name">id</span>
+              <span class="param-type">(required, integer)</span><br />
+              The ID of the plane to retrieve.
+            </div>
+          </div>
+          <div class="example">
+            Example Request:<br />
+            GET /api/planes/1
+          </div>
+          <div class="response">
+            Success Response (200):<br />
+            <pre>
+{
+  "id": 1,
+  "make": "Cessna",
+  "model": "172",
+  "price": "300.000,00 €",
+  "picture": "https://example.com/plane.jpg"
+}</pre
+            >
+          </div>
+          <div class="error">
+            Error Response (404):<br />
+            <pre>
+{
+  "error": "Not Found",
+  "message": "Plane with id 999 not found"
+}</pre
+            >
+          </div>
+        </div>
+      </details>
+
+      <h3>All Assets</h3>
+
+      <details>
+        <summary>GET /api/assets</summary>
+        <div class="endpoint-content">
+          <div class="description">
+            Retrieve a combined list of all assets (cars, boats, houses,
+            planes).
+          </div>
+          <div class="params">
+            <div class="param">
+              <span class="param-name">limit</span>
+              <span class="param-type"
+                >(optional, integer, default: 100, max: 1000)</span
+              ><br />
+              Maximum number of results to return.
+            </div>
+            <div class="param">
+              <span class="param-name">offset</span>
+              <span class="param-type">(optional, integer, default: 0)</span
+              ><br />
+              Number of results to skip for pagination.
+            </div>
+            <div class="param">
+              <span class="param-name">type</span>
+              <span class="param-type"
+                >(optional, string: "car", "boat", "house", "plane")</span
+              ><br />
+              Filter results by asset type.
+            </div>
+          </div>
+          <div class="example">
+            Example Request:<br />
+            GET /api/assets?type=car&limit=25
+          </div>
+          <div class="response">
+            Success Response (200):<br />
+            <pre>
+{
+  "data": [
+    {
+      "id": 1,
+      "make": "Toyota",
+      "model": "Corolla",
+      "price": "20.000,00 €",
+      "picture": "https://example.com/car.jpg",
+      "type": "car"
+    },
+    {
+      "id": 1,
+      "make": "Bayliner",
+      "model": "Element",
+      "price": "150.000,00 €",
+      "picture": "https://example.com/boat.jpg",
+      "type": "boat"
+    }
+  ],
+  "total": 250,
+  "limit": 25,
+  "offset": 0
+}</pre
+            >
+          </div>
+        </div>
+      </details>
+
+      <h2>Error Handling</h2>
+      <p>All endpoints may return the following error responses:</p>
+      <div class="error">
+        Rate Limit Exceeded (429):<br />
+        <pre>
+{
+  "error": "Too Many Requests",
+  "message": "Rate limit exceeded",
+  "retryAfter": "60"
+}</pre
         >
       </div>
-      <p class="description">
-        Complete API documentation with interactive examples is available
-        through Swagger UI.
+
+      <h2>Rate Limiting</h2>
+      <p>
+        The API implements rate limiting to prevent abuse. Most endpoints allow
+        100 requests per 15 minutes per IP address. Some individual item
+        endpoints have stricter limits.
       </p>
     </div>
   </body>

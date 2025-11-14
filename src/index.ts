@@ -2,8 +2,6 @@ import cors from "cors";
 import express from "express";
 import fs from "fs";
 import path from "path";
-import swaggerJsdoc from "swagger-jsdoc";
-import swaggerUi from "swagger-ui-express";
 import { fileURLToPath } from "url";
 import { boats } from "./boats.js";
 import { cars } from "./cars.js";
@@ -24,178 +22,6 @@ const postmanCollectionPath = path.join(
 const postmanCollection = JSON.parse(
   fs.readFileSync(postmanCollectionPath, "utf-8")
 );
-
-// Swagger definition
-const swaggerDefinition = {
-  openapi: "3.0.0",
-  info: {
-    title: "Assets API",
-    version: "1.0.0",
-    description:
-      "API for managing various assets including cars, boats, houses, and planes",
-  },
-  servers: [
-    {
-      url: "http://localhost:3000",
-      description: "Development server",
-    },
-    {
-      url: "https://matti-assets-api.vercel.app",
-      description: "Production server",
-    },
-  ],
-  components: {
-    schemas: {
-      Asset: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-            description: "Unique identifier for the asset",
-          },
-          make: {
-            type: "string",
-            description: "Make of the asset",
-          },
-          model: {
-            type: "string",
-            description: "Model of the asset",
-          },
-          price: {
-            type: "number",
-            description: "Price of the asset in euros",
-          },
-          picture: {
-            type: "string",
-            description: "URL to the asset's picture",
-          },
-          type: {
-            type: "string",
-            enum: ["car", "boat", "house", "plane"],
-            description: "Type of asset (only included in combined endpoints)",
-          },
-        },
-        required: ["id", "make", "model", "price", "picture"],
-      },
-      Error: {
-        type: "object",
-        properties: {
-          error: {
-            type: "string",
-            description: "Error message",
-          },
-          message: {
-            type: "string",
-            description: "Detailed error message",
-          },
-          retryAfter: {
-            type: "string",
-            description: "Time to wait before retrying (for rate limiting)",
-          },
-        },
-      },
-      NotFound: {
-        type: "object",
-        properties: {
-          error: {
-            type: "string",
-            description: "Error message",
-          },
-        },
-      },
-    },
-    parameters: {
-      assetId: {
-        name: "id",
-        in: "path",
-        description: "ID of the asset",
-        required: true,
-        schema: {
-          type: "integer",
-        },
-      },
-      search: {
-        name: "search",
-        in: "query",
-        description: "Search term to filter assets by name, make, or model",
-        schema: {
-          type: "string",
-        },
-      },
-      minPrice: {
-        name: "min_price",
-        in: "query",
-        description: "Minimum price filter",
-        schema: {
-          type: "integer",
-          minimum: 0,
-        },
-      },
-      maxPrice: {
-        name: "max_price",
-        in: "query",
-        description: "Maximum price filter",
-        schema: {
-          type: "integer",
-          minimum: 0,
-        },
-      },
-      make: {
-        name: "make",
-        in: "query",
-        description: "Filter by make",
-        schema: {
-          type: "string",
-        },
-      },
-      model: {
-        name: "model",
-        in: "query",
-        description: "Filter by model",
-        schema: {
-          type: "string",
-        },
-      },
-      sort: {
-        name: "sort",
-        in: "query",
-        description: "Field to sort by",
-        schema: {
-          type: "string",
-          enum: ["price", "name", "id", "make", "model"],
-        },
-      },
-      order: {
-        name: "order",
-        in: "query",
-        description: "Sort order",
-        schema: {
-          type: "string",
-          enum: ["asc", "desc"],
-          default: "asc",
-        },
-      },
-      limit: {
-        name: "limit",
-        in: "query",
-        description: "Maximum number of results to return",
-        schema: {
-          type: "integer",
-          minimum: 1,
-          maximum: 1000,
-          default: 100,
-        },
-      },
-    },
-  },
-};
-
-const options = {
-  swaggerDefinition,
-  apis: ["./src/index.ts"], // Path to the API docs
-};
-
-const swaggerSpec = swaggerJsdoc(options);
 
 const app = express();
 
@@ -259,9 +85,6 @@ const strictLimiter = rateLimit({
 
 // Serve static files from public directory
 app.use(express.static(path.join(__dirname, "../public")));
-
-// Swagger UI
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Serve Postman collection
 app.get("/postman-collection.json", (req, res) => {
@@ -389,7 +212,6 @@ app.get("/", (_req, res) => {
 });
 
 /**
- * @swagger
  * /api/cars:
  *   get:
  *     summary: Get all cars
@@ -423,7 +245,6 @@ app.get("/api/cars", (req, res) => {
 });
 
 /**
- * @swagger
  * /api/cars/{id}:
  *   get:
  *     summary: Get a car by ID
@@ -461,7 +282,6 @@ app.get("/api/cars/:id", (req, res) => {
 });
 
 /**
- * @swagger
  * /api/boats:
  *   get:
  *     summary: Get all boats
@@ -495,7 +315,6 @@ app.get("/api/boats", (req, res) => {
 });
 
 /**
- * @swagger
  * /api/boats/{id}:
  *   get:
  *     summary: Get a boat by ID
@@ -533,7 +352,6 @@ app.get("/api/boats/:id", strictLimiter, (req, res) => {
 });
 
 /**
- * @swagger
  * /api/houses:
  *   get:
  *     summary: Get all houses
@@ -567,7 +385,6 @@ app.get("/api/houses", (req, res) => {
 });
 
 /**
- * @swagger
  * /api/houses/{id}:
  *   get:
  *     summary: Get a house by ID
@@ -605,7 +422,6 @@ app.get("/api/houses/:id", strictLimiter, (req, res) => {
 });
 
 /**
- * @swagger
  * /api/planes:
  *   get:
  *     summary: Get all planes
@@ -639,7 +455,6 @@ app.get("/api/planes", (req, res) => {
 });
 
 /**
- * @swagger
  * /api/planes/{id}:
  *   get:
  *     summary: Get a plane by ID
@@ -677,7 +492,6 @@ app.get("/api/planes/:id", strictLimiter, (req, res) => {
 });
 
 /**
- * @swagger
  * /api/assets:
  *   get:
  *     summary: Get all assets
