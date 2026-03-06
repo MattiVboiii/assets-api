@@ -17,13 +17,31 @@ const __dirname = path.dirname(__filename);
 // Load Postman collection
 const postmanCollectionPath = path.join(
   __dirname,
-  "../public/postman-collection.json"
+  "../public/postman-collection.json",
 );
 const postmanCollection = JSON.parse(
-  fs.readFileSync(postmanCollectionPath, "utf-8")
+  fs.readFileSync(postmanCollectionPath, "utf-8"),
 );
 
 const app = express();
+
+const allSourceAssets = [...cars, ...boats, ...houses, ...planes];
+const imagePathToSourceUrl = new Map<string, string>();
+const sourceDomains = new Set<string>();
+
+for (const asset of allSourceAssets) {
+  try {
+    const sourceUrl = new URL(asset.picture);
+    const imageKey = `${sourceUrl.pathname}${sourceUrl.search}`;
+    sourceDomains.add(sourceUrl.hostname);
+
+    if (!imagePathToSourceUrl.has(imageKey)) {
+      imagePathToSourceUrl.set(imageKey, asset.picture);
+    }
+  } catch {
+    // Ignore invalid URLs so one bad asset cannot break startup.
+  }
+}
 
 // Trust proxy for rate limiting (important for Vercel deployment)
 app.set("trust proxy", 1);
@@ -41,7 +59,7 @@ app.use((req, res, next) => {
   // Content Security Policy
   res.setHeader(
     "Content-Security-Policy",
-    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:"
+    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:",
   );
   next();
 });
@@ -56,7 +74,7 @@ app.use(
     methods: ["GET"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
-  })
+  }),
 );
 
 // Rate limiting
@@ -92,10 +110,36 @@ app.get("/postman-collection.json", (req, res) => {
   res.json(postmanCollection);
 });
 
-function formatAssets(assets: any[]) {
+app.get("/api/image-domains", (_req, res) => {
+  res.json({
+    count: sourceDomains.size,
+    domains: [...sourceDomains].sort((a, b) => a.localeCompare(b)),
+  });
+});
+
+function getApiBaseUrl(req: express.Request) {
+  const configuredUrl = process.env.PUBLIC_API_URL;
+  if (configuredUrl) {
+    return configuredUrl.replace(/\/$/, "");
+  }
+
+  return `${req.protocol}://${req.get("host")}`;
+}
+
+function toApiImageUrl(req: express.Request, sourcePictureUrl: string) {
+  try {
+    const sourceUrl = new URL(sourcePictureUrl);
+    return `${getApiBaseUrl(req)}${sourceUrl.pathname}${sourceUrl.search}`;
+  } catch {
+    return sourcePictureUrl;
+  }
+}
+
+function formatAssets(assets: any[], req: express.Request) {
   return assets.map((asset) => ({
     ...asset,
     price: asset.price.toLocaleString("de-DE"),
+    picture: toApiImageUrl(req, asset.picture),
   }));
 }
 
@@ -120,7 +164,7 @@ function sortAndFilterAssets(assets: any[], query: any) {
     const searchTerm = query.search.toLowerCase().trim();
     if (searchTerm.length > 0 && searchTerm.length <= 100) {
       filteredAssets = filteredAssets.filter((asset) =>
-        getAssetName(asset).toLowerCase().includes(searchTerm)
+        getAssetName(asset).toLowerCase().includes(searchTerm),
       );
     }
   }
@@ -130,7 +174,7 @@ function sortAndFilterAssets(assets: any[], query: any) {
     const makeTerm = query.make.toLowerCase().trim();
     if (makeTerm.length > 0 && makeTerm.length <= 100) {
       filteredAssets = filteredAssets.filter((asset) =>
-        asset.make.toLowerCase().includes(makeTerm)
+        asset.make.toLowerCase().includes(makeTerm),
       );
     }
   }
@@ -140,7 +184,7 @@ function sortAndFilterAssets(assets: any[], query: any) {
     const modelTerm = query.model.toLowerCase().trim();
     if (modelTerm.length > 0 && modelTerm.length <= 100) {
       filteredAssets = filteredAssets.filter((asset) =>
-        asset.model.toLowerCase().includes(modelTerm)
+        asset.model.toLowerCase().includes(modelTerm),
       );
     }
   }
@@ -150,7 +194,7 @@ function sortAndFilterAssets(assets: any[], query: any) {
     const minPrice = parseInt(query.min_price);
     if (!isNaN(minPrice) && minPrice >= 0 && minPrice <= 1000000000) {
       filteredAssets = filteredAssets.filter(
-        (asset) => asset.price >= minPrice
+        (asset) => asset.price >= minPrice,
       );
     }
   }
@@ -158,7 +202,7 @@ function sortAndFilterAssets(assets: any[], query: any) {
     const maxPrice = parseInt(query.max_price);
     if (!isNaN(maxPrice) && maxPrice >= 0 && maxPrice <= 1000000000) {
       filteredAssets = filteredAssets.filter(
-        (asset) => asset.price <= maxPrice
+        (asset) => asset.price <= maxPrice,
       );
     }
   }
@@ -241,7 +285,7 @@ app.get("/", (_req, res) => {
  */
 app.get("/api/cars", (req, res) => {
   const sortedAndFiltered = sortAndFilterAssets(cars, req.query);
-  res.json(formatAssets(sortedAndFiltered));
+  res.json(formatAssets(sortedAndFiltered, req));
 });
 
 /**
@@ -275,7 +319,7 @@ app.get("/api/cars/:id", (req, res) => {
   const id = parseInt(req.params.id);
   const car = cars.find((c) => c.id === id);
   if (car) {
-    res.json(formatAssets([car])[0]);
+    res.json(formatAssets([car], req)[0]);
   } else {
     res.status(404).json({ error: "Car not found" });
   }
@@ -311,7 +355,7 @@ app.get("/api/cars/:id", (req, res) => {
  */
 app.get("/api/boats", (req, res) => {
   const sortedAndFiltered = sortAndFilterAssets(boats, req.query);
-  res.json(formatAssets(sortedAndFiltered));
+  res.json(formatAssets(sortedAndFiltered, req));
 });
 
 /**
@@ -345,7 +389,7 @@ app.get("/api/boats/:id", strictLimiter, (req, res) => {
   const id = parseInt(req.params.id);
   const boat = boats.find((b) => b.id === id);
   if (boat) {
-    res.json(formatAssets([boat])[0]);
+    res.json(formatAssets([boat], req)[0]);
   } else {
     res.status(404).json({ error: "Boat not found" });
   }
@@ -381,7 +425,7 @@ app.get("/api/boats/:id", strictLimiter, (req, res) => {
  */
 app.get("/api/houses", (req, res) => {
   const sortedAndFiltered = sortAndFilterAssets(houses, req.query);
-  res.json(formatAssets(sortedAndFiltered));
+  res.json(formatAssets(sortedAndFiltered, req));
 });
 
 /**
@@ -415,7 +459,7 @@ app.get("/api/houses/:id", strictLimiter, (req, res) => {
   const id = parseInt(req.params.id);
   const house = houses.find((h) => h.id === id);
   if (house) {
-    res.json(formatAssets([house])[0]);
+    res.json(formatAssets([house], req)[0]);
   } else {
     res.status(404).json({ error: "House not found" });
   }
@@ -451,7 +495,7 @@ app.get("/api/houses/:id", strictLimiter, (req, res) => {
  */
 app.get("/api/planes", (req, res) => {
   const sortedAndFiltered = sortAndFilterAssets(planes, req.query);
-  res.json(formatAssets(sortedAndFiltered));
+  res.json(formatAssets(sortedAndFiltered, req));
 });
 
 /**
@@ -485,7 +529,7 @@ app.get("/api/planes/:id", strictLimiter, (req, res) => {
   const id = parseInt(req.params.id);
   const plane = planes.find((p) => p.id === id);
   if (plane) {
-    res.json(formatAssets([plane])[0]);
+    res.json(formatAssets([plane], req)[0]);
   } else {
     res.status(404).json({ error: "Plane not found" });
   }
@@ -536,7 +580,47 @@ app.get("/api/assets", (req, res) => {
   ];
 
   const sortedAndFiltered = sortAndFilterAssets(allAssets, req.query);
-  res.json(formatAssets(sortedAndFiltered));
+  res.json(formatAssets(sortedAndFiltered, req));
+});
+
+// Proxy rewritten image URLs back to their original source domains.
+app.get("/*imagePath", async (req, res, next) => {
+  if (req.path === "/" || req.path.startsWith("/api")) {
+    return next();
+  }
+
+  const queryStart = req.originalUrl.indexOf("?");
+  const search = queryStart >= 0 ? req.originalUrl.slice(queryStart) : "";
+  const imageKey = `${req.path}${search}`;
+  const sourceImageUrl = imagePathToSourceUrl.get(imageKey);
+
+  if (!sourceImageUrl) {
+    return next();
+  }
+
+  try {
+    const upstreamResponse = await fetch(sourceImageUrl);
+
+    if (!upstreamResponse.ok) {
+      return res.status(upstreamResponse.status).json({
+        error: "Image could not be fetched",
+      });
+    }
+
+    const contentType = upstreamResponse.headers.get("content-type");
+    if (contentType) {
+      res.setHeader("Content-Type", contentType);
+    }
+
+    const cacheControl =
+      upstreamResponse.headers.get("cache-control") || "public, max-age=86400";
+    res.setHeader("Cache-Control", cacheControl);
+
+    const imageBuffer = Buffer.from(await upstreamResponse.arrayBuffer());
+    res.send(imageBuffer);
+  } catch (error) {
+    next(error);
+  }
 });
 
 // 404 handler for undefined routes
@@ -554,7 +638,7 @@ app.use(
     err: any,
     req: express.Request,
     res: express.Response,
-    next: express.NextFunction
+    next: express.NextFunction,
   ) => {
     console.error("Error:", err);
 
@@ -566,7 +650,7 @@ app.use(
       message: isDevelopment ? err.message : "Something went wrong",
       ...(isDevelopment && { stack: err.stack }),
     });
-  }
+  },
 );
 
 export default app;
